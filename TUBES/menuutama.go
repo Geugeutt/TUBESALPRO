@@ -5,8 +5,11 @@ import "fmt"
 const NMAX = 10
 
 //nanti tambahin for biar kalau udah selesai ga langsung keluar aplikasi
-func menuUtama(datauser user, i, pilihan, kunci int) {
-	var isKeluar bool
+func menuUtama(datauser user, i, pilihan int, kunci *int) {
+	var (
+		isKeluar bool
+		tipereksadana int
+	)
 
 	for !isKeluar {
 		fmt.Println("\n======= Menu Utama =======")
@@ -23,13 +26,14 @@ func menuUtama(datauser user, i, pilihan, kunci int) {
 
 		switch pilihan {
 		case 1:
-			introKatalog(datauser, kunci, i, pilihan)
+			katalog(&dbReksadana, &dbSaham, &dbObligasi, pilihan, kunci, &tipereksadana)
 		case 2:
-			tampilPortofolio(datauser, dbUser[:], &dbPorto, i, kunci)
+			tampilPortofolio(kunci, &tipereksadana)
 		case 3:
-			//
+			profil(datauser, &dbUser, kunci, pilihan)
 		case 4:
-			fiturLoginDaftar(datauser, i, pilihan, &kunci)
+			fiturLoginDaftar(datauser, i, pilihan, kunci)
+			isKeluar = true
 		case 0:
 			fmt.Println("Terima kasih sudah menggunakan aplikasi ini")
 			isKeluar = true
@@ -37,7 +41,6 @@ func menuUtama(datauser user, i, pilihan, kunci int) {
 			fmt.Println("Pilihan tidak valid")
 		}
 	}
-	//masih ga ta
 }
 
 func keluar() {
@@ -50,11 +53,16 @@ func keluar() {
 //datauser digunain buat nyimpen data pas orang daftar ataupun login (nampung data dari input sebelum dimasukkin ke arraynya)
 func main() {
 	seedPorto()
+	seedTransaksi()
+	seedreksa()
+	seedobligasi()
+	seedsaham()
+	isiUser()
+
 	var datauser user
 	var i, pilihan, kunci int
 
 	i = 2
 
-	isiUser()
 	fiturLoginDaftar(datauser, i, pilihan, &kunci)
 }
