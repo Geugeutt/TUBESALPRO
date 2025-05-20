@@ -1,81 +1,104 @@
 package main
 import "fmt"
 
-// bisa tampilin jumlah nilai aset semuanya, nilai aset tiap jenis invest, presentase persebaran aset ke tiap jenis invest
-func tampilPortofolio(kunci, tipereksadana *int){
+func tampilPortofolio(kunci, tipereksadana, asetDijual, jumlahDijual *int){
 	var (
 		saham, reksadana, obligasi float64
-		pilihan int
-		stat bool
+		pilihan, pilihanporto, totalLokal, count int
+		stat, sort bool
 	)
 
-	pilihPorto(kunci, &pilihan)
-	hitungDetail(&saham, &reksadana, &obligasi, kunci, pilihan)
+	pilihPorto(kunci, &pilihanporto)
+	for !sort {
+		namaPorto := dbPorto[*kunci].detailPorto[pilihanporto-1].tipe
+		if pilihanporto != 0{
+			hitungDetail(&saham, &reksadana, &obligasi, kunci, &totalLokal, pilihanporto)
 
-	fmt.Printf("\n======= Portofolio %s ======\n", dbUser[*kunci].username)
-	fmt.Printf("Jenis Portofolio: %s", dbPorto[*kunci].detailPorto[pilihan-1].tipe)
-	fmt.Printf("\nTotal Aset: %d", dbPorto[*kunci].total)
-	fmt.Println("\n======= Detail Portofolio ======")
-	fmt.Printf("Saham: %d\nReksadana: %d\nObligasi: %d\n", dbPorto[*kunci].detailPorto[pilihan-1].saham, dbPorto[*kunci].detailPorto[pilihan-1].reksadana, dbPorto[*kunci].detailPorto[pilihan-1].obligasi)
-	fmt.Println("======= Persentase Portofolio ======")
-	fmt.Printf("Saham: %.2f persen\nReksadana: %.2f persen\nObligasi: %.2f persen\n\n", saham, reksadana, obligasi)
+			clearScreen()
+			sumber := "PORTOFOLIO"
+			uiHeaderTable(sumber, 0, 0)
+			uiHeaderPorto(dbUser[*kunci].username, namaPorto, totalLokal, saham, reksadana, obligasi)
+			for i:=0 ; i<NMAX ; i++{
+				if dbTransaksi[*kunci].riwayat[i].nilaiAset != 0 && dbTransaksi[*kunci].riwayat[i].portofolio == namaPorto{
+					count++
+					if dbTransaksi[*kunci].riwayat[i].nilaiReturn >= 0 {
+						fmt.Printf("%-1s %-5d %-40s %-24s %-17d  %-.2f %-12s %-18d %-21s\n", " ", count, dbTransaksi[*kunci].riwayat[i].produk, dbTransaksi[*kunci].riwayat[i].tipe, dbTransaksi[*kunci].riwayat[i].nilaiAset + dbTransaksi[*kunci].riwayat[i].nilaiReturn, dbTransaksi[*kunci].riwayat[i].untung, " ", dbTransaksi[*kunci].riwayat[i].nilaiReturn, dbTransaksi[*kunci].riwayat[i].tanggal)
+					}else{
+						fmt.Printf("%-1s %-5d %-40s %-24s %-16d  %-.2f %-12s %-18d %-23s\n", " ", count, dbTransaksi[*kunci].riwayat[i].produk, dbTransaksi[*kunci].riwayat[i].tipe, dbTransaksi[*kunci].riwayat[i].nilaiAset + dbTransaksi[*kunci].riwayat[i].nilaiReturn, dbTransaksi[*kunci].riwayat[i].untung, " ", dbTransaksi[*kunci].riwayat[i].nilaiReturn, dbTransaksi[*kunci].riwayat[i].tanggal)
+					}
+				}
+			}
+			uiFooterTablePanjang()
+		} 
 
-	fmt.Println("1. Beli aset")
-	fmt.Println("2. Jual aset")
-	fmt.Println("3. Analisis aset")
-	fmt.Println("4. Hapus portofolio")
-	fmt.Println("0. Kembali")
-	fmt.Println()
-	for !stat{
-		fmt.Print("Pilihan: ")
-		fmt.Scan(&pilihan)
+		for !stat{
+			fmt.Println()
+			fmt.Println("[1] Cari aset")
+			fmt.Println("[2] Urutkan aset berdasarkan nilai aset")
+			fmt.Println("[3] Beli aset")
+			fmt.Println("[4] Jual aset")
+			fmt.Println("[5] Hapus portofolio")
+			fmt.Println("[0] Kembali")
+			fmt.Println()
+			fmt.Print("Pilihan: ")
+			fmt.Scan(&pilihan)
 
-		switch pilihan{
-		case 1:
-			katalog(&dbReksadana, &dbSaham, &dbObligasi, pilihan, kunci, tipereksadana)
-			stat = true
-		case 2:
-			introJualAset(&dbTransaksi, kunci, tipereksadana, pilihan)
-			stat = true
-		case 3:
-			//panggil prosedur analisis porto
-		case 4:
-			hapusPorto(kunci, pilihan)
-			stat = true
-		case 0:
-			stat = true
-		default:
-			fmt.Println("Pilihan tidak valid")
+			switch pilihan{
+			case 1:
+
+			case 2:
+				sortPorto(kunci)
+				stat = true
+			case 3:
+				clearScreen()
+				katalog(pilihan, kunci, tipereksadana)
+				stat = true
+				sort = true
+			case 4:
+				clearScreen()
+				if pilihanporto != 0{
+					introJualAset(kunci, jumlahDijual, asetDijual, pilihan)
+					sort = true
+				}else {
+					fmt.Println("Anda belum memiliki aset apapun")
+				}
+			case 5:
+				clearScreen()
+				if pilihanporto != 0{
+					hapusPorto(kunci, pilihanporto)
+					sort = true
+				}else{
+					fmt.Print("Anda belum memiliki portofolio")
+				}
+			case 0:
+				clearScreen()
+				sort = true
+				stat = true
+			default:
+				clearScreen()
+				fmt.Println("Pilihan tidak valid")
+			}
 		}
 	}
 }
 
-func hitungDetail(saham, reksadana, obligasi *float64, kunci *int, pilihan int){
-	var totalLokal int
-	for i:=0 ; i<NMAX ; i++{
-		if dbPorto[*kunci].detailPorto[i].tanda == 0{
-			break
-		}
-
-		dbPorto[*kunci].total += dbPorto[*kunci].detailPorto[i].saham + dbPorto[*kunci].detailPorto[i].reksadana + dbPorto[*kunci].detailPorto[i].obligasi
-	}
-
-	totalLokal = dbPorto[*kunci].detailPorto[pilihan-1].saham + dbPorto[*kunci].detailPorto[pilihan-1].reksadana + dbPorto[*kunci].detailPorto[pilihan-1].obligasi
+func hitungDetail(saham, reksadana, obligasi *float64, kunci, totalLokal *int, pilihan int){
+	*totalLokal = dbPorto[*kunci].detailPorto[pilihan-1].saham + dbPorto[*kunci].detailPorto[pilihan-1].reksadana + dbPorto[*kunci].detailPorto[pilihan-1].obligasi
 
 	if dbPorto[*kunci].detailPorto[pilihan-1].saham != 0{
-		*saham = float64(dbPorto[*kunci].detailPorto[pilihan-1].saham)*100.0/float64(totalLokal)
+		*saham = float64(dbPorto[*kunci].detailPorto[pilihan-1].saham)*100.0/float64(*totalLokal)
 	}else{
 		*saham = 0
 	}
 
 	if dbPorto[*kunci].detailPorto[pilihan-1].reksadana != 0{
-		*reksadana = float64(dbPorto[*kunci].detailPorto[pilihan-1].reksadana)*100.0/float64(totalLokal)
+		*reksadana = float64(dbPorto[*kunci].detailPorto[pilihan-1].reksadana)*100.0/float64(*totalLokal)
 	}else{
 		*reksadana = 0
 	}
 
 	if dbPorto[*kunci].detailPorto[pilihan-1].obligasi != 0{
-		*obligasi = float64(dbPorto[*kunci].detailPorto[pilihan-1].obligasi)*100.0/float64(totalLokal)
+		*obligasi = float64(dbPorto[*kunci].detailPorto[pilihan-1].obligasi)*100.0/float64(*totalLokal)
 	}else{
 		*obligasi = 0
 	}
@@ -86,7 +109,7 @@ func pilihPorto(kunci, pilihan *int){
 	fmt.Println("\nPilih portofolio Anda: ")
 	for k=0;k<NMAX;k++{
 		if dbPorto[*kunci].detailPorto[k].tanda == 1 {
-			fmt.Printf("%d. %s\n", k+1, dbPorto[*kunci].detailPorto[k].tipe)
+			fmt.Printf("[%d] %s\n", k+1, dbPorto[*kunci].detailPorto[k].tipe)
 			count++
 		}else {
 			break
@@ -95,14 +118,18 @@ func pilihPorto(kunci, pilihan *int){
 
 	switch count {
 	case 0:
-		fmt.Println("\nAnda belum memiliki portofolio. Harap buat satu.")
+		clearScreen()
+		fmt.Println("Anda belum memiliki portofolio. Harap buat satu.")
+		fmt.Println()
 		buatPortoBaru(kunci, k)
+		*pilihan = k+1
 	default:
-		fmt.Print("0. Buat portofolio baru\n")
+		fmt.Print("[0] Buat portofolio baru\n")
 		fmt.Print("Pilihan: ")
 		fmt.Scan(pilihan)
 
 		if *pilihan == 0{
+			clearScreen()
 			buatPortoBaru(kunci, k)
 			*pilihan = k+1
 		}
@@ -126,55 +153,26 @@ func buatPortoBaru(kunci *int, pilihan int){
 			fmt.Print("Portofolio berhasil ditambahkan!\n\n")
 			stat = true
 		}else{
+			clearScreen()
 			fmt.Println("Gagal menambahkan portofolio, coba lagi.")
 		}
 	}
 }
 
-func hapusPorto(kunci *int, pilihan int){
-	var (
-		l int
-		saham, obligasi, reksadana float64
-	)
+func hapusPorto(kunci *int, pilihPorto int){
 
-	for i:=0; i<NMAX; i++{
-		if dbPorto[*kunci].detailPorto[i].tanda !=0 {
-			fmt.Printf("%d. total = %d\nsubtotal obligasi: %d\nsubtotal reksadana: %d\nsubtotal saham: %d\ntanda: %d\ntipe: %s\n", i+1, dbPorto[*kunci].total, dbPorto[*kunci].detailPorto[i].obligasi, dbPorto[*kunci].detailPorto[i].reksadana, dbPorto[*kunci].detailPorto[i].saham, dbPorto[*kunci].detailPorto[i].tanda, dbPorto[*kunci].detailPorto[i].tipe)
-		}
-	}
+	dbPorto[*kunci].total -= dbPorto[*kunci].detailPorto[pilihPorto-1].saham + dbPorto[*kunci].detailPorto[pilihPorto-1].obligasi + dbPorto[*kunci].detailPorto[pilihPorto-1].reksadana
 
-	if dbPorto[*kunci].detailPorto[pilihan-1].obligasi != 0 || dbPorto[*kunci].detailPorto[pilihan-1].reksadana != 0 || dbPorto[*kunci].detailPorto[pilihan-1].saham != 0{
-		dbPorto[*kunci].detailPorto[pilihan-1].obligasi = 0
-		dbPorto[*kunci].detailPorto[pilihan-1].reksadana = 0
-		dbPorto[*kunci].detailPorto[pilihan-1].saham = 0
-	}
-
-	hitungDetail(&saham, &reksadana, &obligasi, kunci, pilihan)
-
-	l=1
-	for k:=0; k<NMAX; k++{
-		l++
-		if l == NMAX || dbPorto[*kunci].detailPorto[l].tanda == 0 {
+	for k:=pilihPorto-1; k<NMAX; k++{
+		if dbPorto[*kunci].detailPorto[k].tanda == 0 && dbPorto[*kunci].detailPorto[k+1].tanda == 0 {
 			break
 		}
 
-		dbPorto[*kunci].detailPorto[k].obligasi = dbPorto[*kunci].detailPorto[l].obligasi
-		dbPorto[*kunci].detailPorto[k].reksadana = dbPorto[*kunci].detailPorto[l].reksadana
-		dbPorto[*kunci].detailPorto[k].saham = dbPorto[*kunci].detailPorto[l].saham
-		dbPorto[*kunci].detailPorto[k].tanda = dbPorto[*kunci].detailPorto[l].tanda
-		dbPorto[*kunci].detailPorto[k].tipe = dbPorto[*kunci].detailPorto[l].tipe			
-	}
-
-
-	fmt.Println()
-	fmt.Println()
-	fmt.Println()
-
-	for i:=0; i<NMAX; i++{
-		fmt.Println(dbPorto[*kunci].detailPorto[i].tanda !=0)
-		if dbPorto[*kunci].detailPorto[i].tanda !=0 {
-			fmt.Printf("%d. total = %d\nsubtotal obligasi: %d\nsubtotal reksadana: %d\nsubtotal saham: %d\ntanda: %d\ntipe: %s\n", i+1, dbPorto[*kunci].total, dbPorto[*kunci].detailPorto[i].obligasi, dbPorto[*kunci].detailPorto[i].reksadana, dbPorto[*kunci].detailPorto[i].saham, dbPorto[*kunci].detailPorto[i].tanda, dbPorto[*kunci].detailPorto[i].tipe)
-		}
+		dbPorto[*kunci].detailPorto[k].obligasi = dbPorto[*kunci].detailPorto[k+1].obligasi
+		dbPorto[*kunci].detailPorto[k].reksadana = dbPorto[*kunci].detailPorto[k+1].reksadana
+		dbPorto[*kunci].detailPorto[k].saham = dbPorto[*kunci].detailPorto[k+1].saham
+		dbPorto[*kunci].detailPorto[k].tanda = dbPorto[*kunci].detailPorto[k+1].tanda
+		dbPorto[*kunci].detailPorto[k].tipe = dbPorto[*kunci].detailPorto[k+1].tipe			
 	}
 
 	fmt.Println("Portofolio berhasil dihapus")

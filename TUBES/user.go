@@ -23,62 +23,75 @@ func isiUser(){
 	}
 }
 
-func fiturLoginDaftar(datauser user,i, pilihan int, kunci *int){
+func fiturLoginDaftar(datauser user,i, pilihan int, kunci *int, isNew *bool){
 	var stat bool
 
 	for !stat{
-		fmt.Println("======= Daftar/Login =======")
-		fmt.Println("1. Daftar")
-		fmt.Println("2. Login")
-		fmt.Print("0. Keluar\n\n")
+		fmt.Println("========= DAFTAR/LOGIN =========")
+		fmt.Println("[1] Daftar")
+		fmt.Println("[2] Login")
+		fmt.Print("[0] Keluar\n\n")
 		fmt.Print("Pilihan: ")
 		fmt.Scan(&pilihan)
 
 		if pilihan == 1{
 			fmt.Println()
-			fmt.Println("========= Daftar =========")
-			signUp(datauser, pilihan, i, kunci)
+			clearScreen()
+			fmt.Println("============ DAFTAR ============")
+			signUp(datauser, pilihan, i, kunci, isNew)
 			stat = true
 		}else if pilihan == 2{
 			fmt.Println()
-			fmt.Println("========= Login =========")
-			login(datauser, i, pilihan, kunci)
+			clearScreen()
+			fmt.Println("============ LOGIN ============")
+			login(datauser, i, pilihan, kunci, isNew)
 			stat = true
 		}else if pilihan == 0{
+			clearScreen()
 			fmt.Println("Terima kasih sudah menggunakan aplikasi ini.")
 			stat = true
 		}else{
 			fmt.Println()
 			fmt.Println("Pilihan tidak valid")
+			clearScreen()
 		}
 	}
 }
 
-func login(datauser user, i, pilihan int, kunci *int){
+func login(datauser user, i, pilihan int, kunci *int, isNew *bool){
+	*isNew = false
+
 	fmt.Print("Masukkan username anda: ")
 	fmt.Scan(&datauser.username)
 	fmt.Print("Masukkan password anda: ")
 	fmt.Scan(&datauser.password)
-	for k:=0;k<3;k++{
+	for k:=0;k<4;k++{
 		if datauser.username == dbUser[k].username && datauser.password == dbUser[k].password{
 			*kunci = k
-			menuUtama(datauser, pilihan, i, kunci)
+			clearScreen()
+			menuUtama(datauser, pilihan, kunci, isNew)
 			break
-		}else if k==2 && datauser.username != dbUser[k].username && datauser.password != dbUser[k].password{
+		}else if k==3 && datauser.username != dbUser[k].username && datauser.password != dbUser[k].password{
 			fmt.Println("Kombinasi username dan password tidak ditemukan")
-			fmt.Println("1. Coba lagi\n0. Kembali")
+			fmt.Println("[1] Coba lagi\n[0] Keluar")
+			fmt.Print("Pilihan: ")
 			fmt.Scan(&pilihan)
 			if pilihan == 1{
-				fiturLoginDaftar(datauser,i, pilihan, kunci)
+				clearScreen()
+				fiturLoginDaftar(datauser,i, pilihan, kunci, isNew)
 			}else if pilihan == 0{
+				clearScreen()
 				keluar()
 			}
 		}
 	}
 }
 
-func signUp(datauser user, pilihan, i int, kunci *int){
+func signUp(datauser user, pilihan, i int, kunci *int, isNew *bool){
 	var stat bool
+
+	*isNew = true
+
 	for !stat {
 		fmt.Print("Buat username anda: ")
 		fmt.Scan(&datauser.username)
@@ -99,11 +112,13 @@ func signUp(datauser user, pilihan, i int, kunci *int){
 				*kunci = k
 				fmt.Println()
 				fmt.Println("Daftar Berhasil!")
-				menuUtama(datauser, pilihan, i, kunci)
+				clearScreen()
+				menuUtama(datauser, pilihan, kunci, isNew)
 				stat = true
 				break
 			}else if k>=4 && datauser.username != dbUser[k].username && datauser.password != dbUser[k].password{
 				fmt.Println("Daftar Gagal, Coba Lagi")
+				clearScreen()
 			}
 		}
 	}

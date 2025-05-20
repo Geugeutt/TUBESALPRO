@@ -1,25 +1,29 @@
 package main
 import "fmt"
 
-func profil(datauser user, dbUser *[NMAX]user, kunci *int, pilihan int){
+func profil(datauser user, kunci, asetDijual, jumlahDijual *int, pilihan int){
 	var (
 		anything string
 		stat bool
+		jenisTransaksi, count int
 	)
-	fmt.Printf("Username: %s\nPassword: %s\n", dbUser[*kunci].username, dbUser[*kunci].password)
 
-	fmt.Println("1. Ubah Password")
-	fmt.Println("2. Riwayat Transaksi")
-	fmt.Println("3. Switch Akun")
-	fmt.Println("4. Hapus Akun")
-	fmt.Println("0. Kembali")
 
 	for !stat{
+		fmt.Println("=========== PROFILE ===========")
+		fmt.Printf("Username: %s\nPassword: %s\n", dbUser[*kunci].username, dbUser[*kunci].password)
+
+		fmt.Println("[1] Ubah Password")
+		fmt.Println("[2] Riwayat Transaksi")
+		fmt.Println("[3] Switch Akun")
+		fmt.Println("[0] Kembali")
+
 		fmt.Print("Pilihan: ")
 		fmt.Scan(&pilihan)
 
 		switch pilihan {
 		case 1:
+			clearScreen()
 			fmt.Print("Masukkan password baru: ")
 			fmt.Scan(&anything)
 
@@ -29,49 +33,38 @@ func profil(datauser user, dbUser *[NMAX]user, kunci *int, pilihan int){
 				fmt.Println("Password berhasil diubah.")
 				stat = true
 			}else{
+				clearScreen()
 				fmt.Println("Gagal merubah password. Coba lagi")
 			}
 		case 2:
-			fmt.Println("\n1. Pembelian")
-			fmt.Println("2. Penjualan")
-			fmt.Println("0. Kembali")
+			fmt.Println("============================")
+			fmt.Println("\n[1] Pembelian")
+			fmt.Println("[2] Penjualan")
+			fmt.Println("[0] Kembali")
 			fmt.Print("Pilihan: ")
 			fmt.Scan(&pilihan)
 
 			if pilihan == 1{
-				tampilTransaksiPembelian(kunci, pilihan)
-				stat = true
+				clearScreen()
+				jenisTransaksi = tampilTransaksiPembelian(kunci, &count)
+				filterTransaksi(kunci, pilihan, jenisTransaksi)
 			}else if pilihan == 2{
-				tampilTransaksiPenjualan(kunci, pilihan)
-				stat = true
+				clearScreen()
+				jenisTransaksi = tampilTransaksiPenjualan(kunci, *jumlahDijual, *asetDijual)
+				filterTransaksi(kunci, pilihan, jenisTransaksi)
 			}
 		case 3:
-			switchAkun(datauser, dbUser, kunci)
+			clearScreen()
+			switchAkun(datauser, kunci)
 			stat = true
-		case 4:
-			cek := false
-			for !cek{
-				fmt.Println("Apakah Anda yakin akan menghapus akun ini?")
-				fmt.Scan(&anything)
-
-				if anything == "Ya" || anything == "ya"{
-					// hapusAkun(kunci)
-					cek = true
-					stat = true
-				}else if anything == "Tidak" || anything == "tidak"{
-					cek = true
-					stat = true
-				}else{
-					fmt.Println("Pilihan tidak valid")
-				}
-			}
 		case 0:
+			clearScreen()
 			stat = true
 		}
 	}
 }
 
-func switchAkun (datauser user, dbUser *[NMAX]user, kunci *int){
+func switchAkun (datauser user, kunci *int){
 	fmt.Print("Masukkan username: ")
 	fmt.Scan(&datauser.username)
 	fmt.Print("Masukkan password: ")

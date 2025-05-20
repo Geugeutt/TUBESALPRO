@@ -4,20 +4,21 @@ import "fmt"
 
 const NMAX = 10
 
-//nanti tambahin for biar kalau udah selesai ga langsung keluar aplikasi
-func menuUtama(datauser user, i, pilihan int, kunci *int) {
+func menuUtama(datauser user, pilihan int, kunci *int, isNew *bool) {
 	var (
 		isKeluar bool
-		tipereksadana int
+		tipereksadana, asetDijual, jumlahDijual int
 	)
 
 	for !isKeluar {
-		fmt.Println("\n======= Menu Utama =======")
-		fmt.Println("1. Katalog")
-		fmt.Println("2. Portofolio") //bisa nambahin aset (beli) dan kurangin aset (jual)
-		fmt.Println("3. Profil")
-		fmt.Println("4. Kembali")
-		fmt.Println("0. Keluar")
+		dashboard(kunci, *isNew)
+
+		fmt.Println("\n========== MENU UTAMA ==========")
+		fmt.Println("[1] Katalog")
+		fmt.Println("[2] Portofolio")
+		fmt.Println("[3] Profil")
+		fmt.Println("[4] Kembali")
+		fmt.Println("[0] Keluar")
 		fmt.Println()
 
 		fmt.Print("Pilihan: ")
@@ -26,18 +27,22 @@ func menuUtama(datauser user, i, pilihan int, kunci *int) {
 
 		switch pilihan {
 		case 1:
-			katalog(&dbReksadana, &dbSaham, &dbObligasi, pilihan, kunci, &tipereksadana)
+			clearScreen()
+			katalog(pilihan, kunci, &tipereksadana)
 		case 2:
-			tampilPortofolio(kunci, &tipereksadana)
+			clearScreen()
+			tampilPortofolio(kunci, &tipereksadana, &asetDijual, &jumlahDijual)
 		case 3:
-			profil(datauser, &dbUser, kunci, pilihan)
+			clearScreen()
+			profil(datauser, kunci, &asetDijual, &jumlahDijual, pilihan)
 		case 4:
-			fiturLoginDaftar(datauser, i, pilihan, kunci)
 			isKeluar = true
 		case 0:
+			clearScreen()
 			fmt.Println("Terima kasih sudah menggunakan aplikasi ini")
 			isKeluar = true
 		default:
+			clearScreen()
 			fmt.Println("Pilihan tidak valid")
 		}
 	}
@@ -59,10 +64,13 @@ func main() {
 	seedsaham()
 	isiUser()
 
-	var datauser user
-	var i, pilihan, kunci int
+	var (
+		datauser user
+		i, pilihan, kunci int
+		isNew bool
+	)
 
 	i = 2
 
-	fiturLoginDaftar(datauser, i, pilihan, &kunci)
+	fiturLoginDaftar(datauser, i, pilihan, &kunci, &isNew)
 }

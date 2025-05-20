@@ -1,7 +1,7 @@
 package main
 
 type detailPembelian struct{
-	nilaiAset, tanda, jumlah int
+	nilaiAset, tanda, jumlah, nilaiReturn int
 	produk, portofolio, tanggal, tipe string
 	untung float64
 }
@@ -28,6 +28,7 @@ func seedTransaksi(){
 	dbTransaksi[0] = transaksi{
 		riwayat: [NMAX]detailPembelian{
 			{nilaiAset: 100000,
+			 nilaiReturn: 530000,
 			 jumlah: 10, 
 			 produk: "Majoris Pasar Uang Syariah Indonesia", 
 			 tipe: "Reksadana Pasar Uang", 
@@ -37,6 +38,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 6400,
+			 nilaiReturn: 10240,
 			 jumlah: 100, 
 			 produk: "HUMI", 
 			 tipe: "Saham", 
@@ -45,8 +47,9 @@ func seedTransaksi(){
 			 tanggal: "15-04-2025", 
 			 tanda: 1},
 
-			{nilaiAset: 1000000,
-			 jumlah: 10, 
+			{nilaiAset: 100000,
+			 nilaiReturn: -627000,
+			 jumlah: 1, 
 			 produk: "BNP Paribas Infrastruktur Plus", 
 			 tipe: "Reksadana Saham", 
 			 portofolio: "Tabungan", 
@@ -55,6 +58,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 1000000,
+			 nilaiReturn: 5990000,
 			 jumlah: 10, 
 			 produk: "BNI-AM ITB Harmoni", 
 			 tipe: "Reksadana Obligasi", 
@@ -64,6 +68,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 1000000,
+			 nilaiReturn: 5500000,
 			 jumlah: 1, 
 			 produk: "FR0086", 
 			 tipe: "Obligasi", 
@@ -73,6 +78,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 6400,
+			 nilaiReturn: 9984,
 			 jumlah: 100, 
 			 produk: "HUMI", 
 			 tipe: "Saham", 
@@ -86,6 +92,7 @@ func seedTransaksi(){
 	dbTransaksi[1] = transaksi{
 		riwayat: [NMAX]detailPembelian{
 			{nilaiAset: 642500,
+			 nilaiReturn: 57825,
 			 jumlah: 100, 
 			 produk: "BREN", 
 			 tipe: "Saham", 
@@ -95,6 +102,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 1000000,
+			 nilaiReturn: 5370000,
 			 jumlah: 1, 
 			 produk: "PBS036", 
 			 tipe: "Obligasi", 
@@ -104,6 +112,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 1000000,
+			 nilaiReturn: 1810000,
 			 jumlah: 10, 
 			 produk: "Grow Obligasi Optima Dinamis Kelas O", 
 			 tipe: "Reksadana Obligasi", 
@@ -113,6 +122,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 100000,
+			 nilaiReturn: -46000,
 			 jumlah: 1, 
 			 produk: "Grow Saham Indonesia Plus Kelas O", 
 			 tipe: "Reksadana Saham", 
@@ -121,7 +131,8 @@ func seedTransaksi(){
 			 tanggal: "20-04-2025", 
 			 tanda: 1},
 
-			{nilaiAset: 100000, 
+			{nilaiAset: 100000,
+			 nilaiReturn: 486000, 
 			 jumlah: 1,
 			 produk: "Danamas Rupiah Plus", 
 			 tipe: "Reksadana Pasar Uang", 
@@ -131,6 +142,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 897500,
+			 nilaiReturn: 26925,
 			 jumlah: 100, 
 			 produk: "CUAN", 
 			 tipe: "Saham", 
@@ -144,6 +156,7 @@ func seedTransaksi(){
 	dbTransaksi[2] = transaksi{
 		riwayat: [NMAX]detailPembelian{
 			{nilaiAset: 100000,
+			 nilaiReturn: 530000,
 			 jumlah: 10, 
 			 produk: "Majoris Pasar Uang Syariah Indonesia", 
 			 tipe: "Reksadana Pasar Uang", 
@@ -153,6 +166,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 6400,
+			 nilaiReturn: 10240,
 			 jumlah: 100, 
 			 produk: "HUMI", 
 			 tipe: "Saham", 
@@ -161,8 +175,9 @@ func seedTransaksi(){
 			 tanggal: "15-04-2025", 
 			 tanda: 1},
 
-			{nilaiAset: 1000000,
-			 jumlah: 10, 
+			{nilaiAset: 100000,
+			 nilaiReturn: -627000,
+			 jumlah: 1, 
 			 produk: "BNP Paribas Infrastruktur Plus", 
 			 tipe: "Reksadana Saham", 
 			 portofolio: "Dana Pendidikan", 
@@ -171,6 +186,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 1000000,
+			 nilaiReturn: 5990000,
 			 jumlah: 10, 
 			 produk: "BNI-AM ITB Harmoni", 
 			 tipe: "Reksadana Obligasi", 
@@ -180,6 +196,7 @@ func seedTransaksi(){
 			 tanda: 1},	
 
 			{nilaiAset: 1000000,
+			 nilaiReturn: 5500000,
 			 jumlah: 1, 
 			 produk: "FR0086", 
 			 tipe: "Obligasi", 
@@ -189,6 +206,7 @@ func seedTransaksi(){
 			 tanda: 1},
 
 			{nilaiAset: 6400,
+			 nilaiReturn: 9984,
 			 jumlah: 100, 
 			 produk: "HUMI", 
 			 tipe: "Saham", 
@@ -202,59 +220,59 @@ func seedTransaksi(){
 
 func seedPorto(){
 	dbPorto[0] = porto{
-		total : 3022800,
+		total : 13626024,
 		detailPorto: [NMAX]subtotal{
 			{tanda: 1,
 			 tipe: "Tabungan",
 			 saham: 0,
-			 reksadana: 1000000,
-			 obligasi: 2000000,},
+			 reksadana: 6463000,
+			 obligasi: 6500000,},
 
 			{tanda: 1,
 			 tipe: "Dana Darurat",
-			 saham: 12800,
-			 reksadana: 100000,
+			 saham: 33024,
+			 reksadana: 630000,
 			 obligasi: 0,},
 		},
 	}
 
 	dbPorto[1] = porto{
-		total: 3740000,
+		total: 11444750,
 		detailPorto: [NMAX]subtotal{
 			{tanda : 1,
 			 tipe: "Dana Darurat",
 			 saham: 0,
-			 reksadana: 200000,
-			 obligasi: 1000000,},
+			 reksadana: 640000,
+			 obligasi: 6370000,},
 
 			{tanda: 1,
 			 tipe: "Dana Pensiun",
-			 saham: 1540000,
-			 reksadana: 0,
-			 obligasi: 1000000,},
+			 saham: 1624750,
+			 reksadana: 2810000,
+			 obligasi: 0,},
 		},
 	}
 
 	dbPorto[2] = porto{
-		total: 3112800,
+		total: 13626024,
 		detailPorto: [NMAX]subtotal{
 			{tanda: 1,
 			 tipe: "Dana Pendidikan",
-			 saham: 12800,
-			 reksadana: 1000000,
-			 obligasi: 1000000,},
+			 saham: 33024,
+			 reksadana: 6463000,
+			 obligasi: 0,},
 
 			{tanda: 1,
 			 tipe: "Liburan Keluarga",
 			 saham: 0,
-			 reksadana: 100000,
+			 reksadana: 630000,
 			 obligasi: 0,},
 
 			{tanda: 1,
 			 tipe: "Dana Investasi",
 			 saham: 0,
 			 reksadana: 0,
-			 obligasi: 1000000,},
+			 obligasi: 6500000,},
 		},
 	}
 }

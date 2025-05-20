@@ -106,7 +106,7 @@ func seedreksa(){
              returnreksa: 4.86},
 
             {Produk: "Bahana Dana Likuid Kelas G",
-             kustodian: "STANDARD CHARTERED", 
+             kustodian: "STD CHARTERED", 
              penampung: "JAGO", 
              minimal: 10000, 
              returnreksa: 4.72},
@@ -171,14 +171,14 @@ func seedreksa(){
              returnreksa: -7.00},
 
             {Produk: "Avrist IDX30",
-             kustodian: "STANDARD CHARTERED", 
+             kustodian: "STD CHARTERED", 
              penampung: "BCA", 
              minimal: 10000, 
              returnreksa: -7.51},
 
             {Produk: "Eastspring IDX ESG Leaders Plus Kelas A",
-             kustodian: "STANDARD CHARTERED", 
-             penampung: "STANDARD CHARTERED", 
+             kustodian: "STD CHARTERED", 
+             penampung: "STD CHARTERED", 
              minimal: 10000, 
              returnreksa: -5.33},
         },
@@ -194,7 +194,7 @@ func seedreksa(){
              returnreksa: 6.39},
 
             {Produk: "Grow Obligasi Optima Dinamis Kelas O",
-             kustodian: "STANDARD CHARTERED", 
+             kustodian: "STD CHARTERED", 
              penampung: "BCA", 
              minimal: 100000, 
              returnreksa: 1.81},
