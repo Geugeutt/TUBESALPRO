@@ -1,14 +1,6 @@
 package main
 import "fmt"
 
-func untungRugi(kunci *int){
-	for i:=0 ; i<NMAX ; i++{
-		if dbTransaksi[*kunci].riwayat[i].tanda == 1{
-			dbTransaksi[*kunci].riwayat[i].nilaiReturn = int(dbTransaksi[*kunci].riwayat[i].untung * float64(dbTransaksi[*kunci].riwayat[i].nilaiAset))
-		}
-	}
-}
-
 func dashboard(kunci *int, isNew bool){
 	var (
 		imbal, nilaiAwal int

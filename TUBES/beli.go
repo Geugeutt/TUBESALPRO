@@ -11,10 +11,8 @@ func introBeliSaham(kunci *int){
 		stat bool
 	)
 
-	sumber := "SAHAM"
-
 	for !stat {
-		fmt.Println("Pilih saham yang akan Anda beli")
+		fmt.Println("Masukkan (nama) saham yang akan Anda beli")
 		fmt.Print("Pilihan: ")
 		fmt.Scan(&produk)
 		fmt.Println()
@@ -22,16 +20,16 @@ func introBeliSaham(kunci *int){
 		clearScreen()
 		fmt.Println("==========================================")
 		fmt.Println("Silahkan periksa kembali pilihan Anda")
-		pilihan = cariAset(sumber) + 1
+		pilihan = cariAsetSequential(produk) + 1
 		fmt.Printf("\nNama Produk: %s \nHarga/lembar: %d \nReturn: %.2f\n", dbSaham[pilihan-1].produksaham.namaProduk, dbSaham[pilihan-1].produksaham.hargaPerLembar, dbSaham[pilihan-1].produksaham.returnaset)
 		fmt.Println()
 
-		produk = dbObligasi[pilihan-1].produkobligasi.namaProduk
+		produk = dbSaham[pilihan-1].produksaham.namaProduk
 		untung := dbSaham[pilihan-1].produksaham.returnaset
 
 		fmt.Print("Yakin untuk melanjutkan? (Ya/Tidak): ")
 		fmt.Scan(&yakin)
-		
+			
 		if yakin == "Ya" || yakin == "ya"{
 			beliSaham(untung, pilihan, kunci, yakin, produk)
 			stat = true

@@ -33,7 +33,7 @@ func katalog(pilihan int, kunci, tipereksadana *int){
             uiFooterTablePendek()
             fmt.Println()
 
-            maubeli(*tipereksadana, pilihan, kunci)
+            mauBeli(*tipereksadana, pilihan, kunci)
         }else if pilihan == 2{
             clearScreen()
             fmt.Println("Tipe Reksadana : ")
@@ -52,7 +52,7 @@ func katalog(pilihan int, kunci, tipereksadana *int){
             uiFooterTablePanjang()
             fmt.Println()
 
-            maubeli(*tipereksadana, pilihan, kunci)
+            mauBeli(*tipereksadana, pilihan, kunci)
         }else if pilihan == 3{
             clearScreen()
             uiHeaderTable(sumber, pilihan, *tipereksadana)
@@ -63,7 +63,7 @@ func katalog(pilihan int, kunci, tipereksadana *int){
             uiFooterTableSuperPanjang()
             fmt.Println()
 
-            maubeli(*tipereksadana, pilihan, kunci)
+            mauBeli(*tipereksadana, pilihan, kunci)
         }else if pilihan == 0{
             clearScreen()
             stat = true
@@ -74,7 +74,7 @@ func katalog(pilihan int, kunci, tipereksadana *int){
     }
 }
 
-func maubeli(tipereksadana, pilihan int, kunci *int){
+func mauBeli(tipereksadana, pilihan int, kunci *int){
     var (
         chose int
         stat bool

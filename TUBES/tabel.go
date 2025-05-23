@@ -15,7 +15,7 @@ func uiHeaderPorto(user, namaPorto string, totalAset int, saham, reksadana, obli
 	right := total - len(title) - left
 	fmt.Println(strings.Repeat("=", left) + title + strings.Repeat("=", right))
 
-	fmt.Printf("%-1s %-5s %-40s %-24s %-17s %-15s %-20s %-20s\n", " ", "No", "Produk", "Jenis Aset", "Nilai Aset", "Return", "Profit/Loss (Rp)", "Tanggal Beli")
+	fmt.Printf("%-1s %-5s %-40s %-24s %-17s %-15s %-20s\n", " ", "No", "Produk", "Jenis Aset", "Nilai Aset", "Return", "Profit/Loss (Rp)")
 	fmt.Println(strings.Repeat("-", 142))
 }
 

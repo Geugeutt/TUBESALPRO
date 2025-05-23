@@ -37,13 +37,11 @@ func fiturLoginDaftar(datauser user,i, pilihan int, kunci *int, isNew *bool){
 		if pilihan == 1{
 			fmt.Println()
 			clearScreen()
-			fmt.Println("============ DAFTAR ============")
 			signUp(datauser, pilihan, i, kunci, isNew)
 			stat = true
 		}else if pilihan == 2{
 			fmt.Println()
 			clearScreen()
-			fmt.Println("============ LOGIN ============")
 			login(datauser, i, pilihan, kunci, isNew)
 			stat = true
 		}else if pilihan == 0{
@@ -61,6 +59,7 @@ func fiturLoginDaftar(datauser user,i, pilihan int, kunci *int, isNew *bool){
 func login(datauser user, i, pilihan int, kunci *int, isNew *bool){
 	*isNew = false
 
+	fmt.Println("============ LOGIN ============")
 	fmt.Print("Masukkan username anda: ")
 	fmt.Scan(&datauser.username)
 	fmt.Print("Masukkan password anda: ")
@@ -90,35 +89,45 @@ func login(datauser user, i, pilihan int, kunci *int, isNew *bool){
 func signUp(datauser user, pilihan, i int, kunci *int, isNew *bool){
 	var stat bool
 
-	*isNew = true
+	fmt.Println("============ DAFTAR ============")
+	fmt.Print("Buat username anda: ")
+	fmt.Scan(&datauser.username)
+	fmt.Print("[Password harus 5 karakter]\nBuat password anda: ")
+	fmt.Scan(&datauser.password)
 
-	for !stat {
-		fmt.Print("Buat username anda: ")
-		fmt.Scan(&datauser.username)
-		fmt.Print("[Password harus 5 karakter]\nBuat password anda: ")
-		fmt.Scan(&datauser.password)
+	for k:=0; k<4; k++{
+		if datauser.username == dbUser[k].username && datauser.password == dbUser[k].password{
+			clearScreen()
+			fmt.Println("Anda sudah pernah terdaftar, silahkan login.")
+			login(datauser, i, pilihan, kunci, isNew)
+			break
+		}else if k == 3 && (datauser.username != dbUser[k].username || datauser.password != dbUser[k].password){
+			*isNew = true
 
-		if len(datauser.password)!=5{
-			fmt.Print("\nPassword tidak memenuhi kriteria, masukkan password baru!\nPassword baru: ")
-			fmt.Scan(&datauser.password)
-		}
+			for !stat {
+				if len(datauser.password)!=5{
+					fmt.Print("\nPassword tidak memenuhi kriteria, masukkan password baru!\nPassword baru: ")
+					fmt.Scan(&datauser.password)
+				}
 
-		i++
-		dbUser[i].username = datauser.username
-		dbUser[i].password = datauser.password
+				i++
+				dbUser[i].username = datauser.username
+				dbUser[i].password = datauser.password
 
-		for k:=0;k<4;k++{
-			if datauser.username == dbUser[k].username && datauser.password == dbUser[k].password{
-				*kunci = k
-				fmt.Println()
-				fmt.Println("Daftar Berhasil!")
-				clearScreen()
-				menuUtama(datauser, pilihan, kunci, isNew)
-				stat = true
-				break
-			}else if k>=4 && datauser.username != dbUser[k].username && datauser.password != dbUser[k].password{
-				fmt.Println("Daftar Gagal, Coba Lagi")
-				clearScreen()
+				for k:=0;k<4;k++{
+					if datauser.username == dbUser[k].username && datauser.password == dbUser[k].password{
+						*kunci = k
+						fmt.Println()
+						fmt.Println("Daftar Berhasil!")
+						clearScreen()
+						menuUtama(datauser, pilihan, kunci, isNew)
+						stat = true
+						break
+					}else if k>=4 && datauser.username != dbUser[k].username && datauser.password != dbUser[k].password{
+						fmt.Println("Daftar Gagal, Coba Lagi")
+						clearScreen()
+					}
+				}
 			}
 		}
 	}

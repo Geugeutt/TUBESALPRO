@@ -1,19 +1,57 @@
 package main
 import "fmt"
 
-func sortPorto(kunci *int){
+var dbTempforSort[NMAX]transaksi
+
+func sortPortobyAset(kunci *int){
 	var maxIdx int
 
 	for i := 0; i < NMAX-1; i++ {
 		maxIdx = i
 		for j := i + 1; j < NMAX; j++ {
-			if (dbTransaksi[*kunci].riwayat[j].nilaiAset + dbTransaksi[*kunci].riwayat[j].nilaiReturn) > (dbTransaksi[*kunci].riwayat[maxIdx].nilaiAset + dbTransaksi[*kunci].riwayat[maxIdx].nilaiReturn) {
+			if (dbTempforSort[*kunci].riwayat[j].nilaiAset + dbTempforSort[*kunci].riwayat[j].nilaiReturn) > (dbTempforSort[*kunci].riwayat[maxIdx].nilaiAset + dbTempforSort[*kunci].riwayat[maxIdx].nilaiReturn) {
+				maxIdx = j
+			}else if dbTempforSort[*kunci].riwayat[j].nilaiAset == 0 {
+				break
+			}
+		}
+
+		dbTempforSort[*kunci].riwayat[i], dbTempforSort[*kunci].riwayat[maxIdx] = dbTempforSort[*kunci].riwayat[maxIdx], dbTempforSort[*kunci].riwayat[i]
+	}
+}
+
+func sortforBinary(kunci *int){
+		var maxIdx int
+
+	for i := 0; i < NMAX-1; i++ {
+		maxIdx = i
+		for j := i + 1; j < NMAX; j++ {
+			if dbTempforSort[*kunci].riwayat[j].produk < dbTempforSort[*kunci].riwayat[maxIdx].produk && dbTempforSort[*kunci].riwayat[j].produk != ""{
 				maxIdx = j
 			}
 		}
 
-		dbTransaksi[*kunci].riwayat[i], dbTransaksi[*kunci].riwayat[maxIdx] = dbTransaksi[*kunci].riwayat[maxIdx], dbTransaksi[*kunci].riwayat[i]
+		dbTempforSort[*kunci].riwayat[i], dbTempforSort[*kunci].riwayat[maxIdx] = dbTempforSort[*kunci].riwayat[maxIdx], dbTempforSort[*kunci].riwayat[i]
 	}
+}
+
+func afterSort(sumber, namaPorto string, kunci *int, totalLokal int, saham, reksadana, obligasi float64){
+	var count int
+
+	clearScreen()
+		uiHeaderTable(sumber, 0, 0)
+		uiHeaderPorto(dbUser[*kunci].username, namaPorto, totalLokal, saham, reksadana, obligasi)
+		for i:=0 ; i<NMAX ; i++{
+			if dbTempforSort[*kunci].riwayat[i].nilaiAset != 0{
+				count++
+				if dbTransaksi[*kunci].riwayat[i].nilaiReturn >= 0 {
+					fmt.Printf("%-1s %-5d %-40s %-24s %-17d  %-.2f %-12s %-18d %-21s\n", " ", count, dbTempforSort[*kunci].riwayat[i].produk, dbTempforSort[*kunci].riwayat[i].tipe, dbTempforSort[*kunci].riwayat[i].nilaiAset + dbTempforSort[*kunci].riwayat[i].nilaiReturn, dbTempforSort[*kunci].riwayat[i].untung, " ", dbTempforSort[*kunci].riwayat[i].nilaiReturn, dbTempforSort[*kunci].riwayat[i].tanggal)
+				}else{
+					fmt.Printf("%-1s %-5d %-40s %-24s %-16d  %-.2f %-12s %-18d %-23s\n", " ", count, dbTempforSort[*kunci].riwayat[i].produk, dbTempforSort[*kunci].riwayat[i].tipe, dbTempforSort[*kunci].riwayat[i].nilaiAset + dbTempforSort[*kunci].riwayat[i].nilaiReturn, dbTempforSort[*kunci].riwayat[i].untung, " ", dbTempforSort[*kunci].riwayat[i].nilaiReturn, dbTempforSort[*kunci].riwayat[i].tanggal)
+				}
+			}
+		}
+		uiFooterTablePanjang()
 }
 
 func rekomendasiSaham(){
@@ -29,9 +67,7 @@ func rekomendasiSaham(){
 		key3 = dbSaham[i].produksaham.hargaPerLembar
 		j := i-1
 		for j>=0 && dbSaham[j].produksaham.returnaset < key1{
-			dbSaham[j+1].produksaham.returnaset = dbSaham[j].produksaham.returnaset
-			dbSaham[j+1].produksaham.namaProduk = dbSaham[j].produksaham.namaProduk
-			dbSaham[j+1].produksaham.hargaPerLembar = dbSaham[j].produksaham.hargaPerLembar
+			dbSaham[j+1].produksaham = dbSaham[j].produksaham
 			j--
 		}
 		dbSaham[j+1].produksaham.returnaset = key1
@@ -45,7 +81,7 @@ func rekomendasiSaham(){
 	uiHeaderRekomendasi()
 	for i:=0; i<NMAX; i++{
 		if dbSaham[i].produksaham.hargaPerLembar > 0{
-			fmt.Printf("  %-7d %-40s %-15d %.2f\n", i+1, dbSaham[i].produksaham.namaProduk, dbSaham[i].produksaham.hargaPerLembar, dbSaham[i].produksaham.returnaset)
+			fmt.Printf("  %-7d %-40s %-20d %.2f\n", i+1, dbSaham[i].produksaham.namaProduk, dbSaham[i].produksaham.hargaPerLembar, dbSaham[i].produksaham.returnaset)
 		}
 	}
 	uiFooterTablePanjang()
@@ -64,9 +100,7 @@ func rekomendasiReksa(tipereksadana int){
 		key3 = dbReksadana[tipereksadana-1].produkreksa[i].minimal
 		j := i-1
 		for j>=0 && dbSaham[j].produksaham.returnaset < key1{
-			dbReksadana[tipereksadana-1].produkreksa[j+1].returnreksa = dbReksadana[tipereksadana-1].produkreksa[j].returnreksa
-			dbReksadana[tipereksadana-1].produkreksa[j+1].Produk = dbReksadana[tipereksadana-1].produkreksa[j].Produk
-			dbReksadana[tipereksadana-1].produkreksa[j+1].minimal = dbReksadana[tipereksadana-1].produkreksa[j].minimal
+			dbReksadana[tipereksadana-1].produkreksa[j+1] = dbReksadana[tipereksadana-1].produkreksa[j]
 			j--
 		}
 		dbReksadana[tipereksadana-1].produkreksa[j+1].returnreksa = key1
@@ -99,9 +133,7 @@ func rekomendasiObli(){
 		key3 = dbObligasi[i].produkobligasi.hargaPerLembar
 		j := i-1
 		for j>=0 && dbSaham[j].produksaham.returnaset < key1{
-			dbObligasi[j+1].produkobligasi.returnaset = dbObligasi[j].produkobligasi.returnaset
-			dbObligasi[j+1].produkobligasi.namaProduk = dbObligasi[j].produkobligasi.namaProduk
-			dbObligasi[j+1].produkobligasi.hargaPerLembar = dbObligasi[j].produkobligasi.hargaPerLembar
+			dbObligasi[j+1].produkobligasi = dbObligasi[j].produkobligasi
 			j--
 		}
 		dbObligasi[j+1].produkobligasi.returnaset = key1

@@ -1,86 +1,127 @@
 package main
-import "fmt"
+import (
+	"fmt" 
+)
 
 func tampilPortofolio(kunci, tipereksadana, asetDijual, jumlahDijual *int){
 	var (
 		saham, reksadana, obligasi float64
 		pilihan, pilihanporto, totalLokal, count int
-		stat, sort bool
+		stat bool
+		sumber, target string
 	)
 
-	pilihPorto(kunci, &pilihanporto)
-	for !sort {
-		namaPorto := dbPorto[*kunci].detailPorto[pilihanporto-1].tipe
-		if pilihanporto != 0{
-			hitungDetail(&saham, &reksadana, &obligasi, kunci, &totalLokal, pilihanporto)
+	kosongkanTempforSort(kunci)
 
-			clearScreen()
-			sumber := "PORTOFOLIO"
-			uiHeaderTable(sumber, 0, 0)
-			uiHeaderPorto(dbUser[*kunci].username, namaPorto, totalLokal, saham, reksadana, obligasi)
-			for i:=0 ; i<NMAX ; i++{
-				if dbTransaksi[*kunci].riwayat[i].nilaiAset != 0 && dbTransaksi[*kunci].riwayat[i].portofolio == namaPorto{
-					count++
-					if dbTransaksi[*kunci].riwayat[i].nilaiReturn >= 0 {
-						fmt.Printf("%-1s %-5d %-40s %-24s %-17d  %-.2f %-12s %-18d %-21s\n", " ", count, dbTransaksi[*kunci].riwayat[i].produk, dbTransaksi[*kunci].riwayat[i].tipe, dbTransaksi[*kunci].riwayat[i].nilaiAset + dbTransaksi[*kunci].riwayat[i].nilaiReturn, dbTransaksi[*kunci].riwayat[i].untung, " ", dbTransaksi[*kunci].riwayat[i].nilaiReturn, dbTransaksi[*kunci].riwayat[i].tanggal)
-					}else{
-						fmt.Printf("%-1s %-5d %-40s %-24s %-16d  %-.2f %-12s %-18d %-23s\n", " ", count, dbTransaksi[*kunci].riwayat[i].produk, dbTransaksi[*kunci].riwayat[i].tipe, dbTransaksi[*kunci].riwayat[i].nilaiAset + dbTransaksi[*kunci].riwayat[i].nilaiReturn, dbTransaksi[*kunci].riwayat[i].untung, " ", dbTransaksi[*kunci].riwayat[i].nilaiReturn, dbTransaksi[*kunci].riwayat[i].tanggal)
-					}
+	pilihPorto(kunci, &pilihanporto)
+	namaPorto := dbPorto[*kunci].detailPorto[pilihanporto-1].tipe
+	pengisianArrayBantu(kunci, namaPorto)
+	if pilihanporto != 0{
+
+		hitungDetail(&saham, &reksadana, &obligasi, kunci, &totalLokal, pilihanporto)
+		clearScreen()
+
+		sumber = "PORTOFOLIO"
+		uiHeaderTable(sumber, 0, 0)
+		uiHeaderPorto(dbUser[*kunci].username, namaPorto, totalLokal, saham, reksadana, obligasi)
+
+		for i:=0 ; i<NMAX ; i++{
+			if dbTempforSort[*kunci].riwayat[i].nilaiAset != 0 && dbTempforSort[*kunci].riwayat[i].portofolio == namaPorto{
+				count++
+				if dbTempforSort[*kunci].riwayat[i].nilaiReturn >= 0 {
+					fmt.Printf("%-1s %-5d %-40s %-24s %-17d  %-.2f %-12s %-18d\n", " ", count, dbTempforSort[*kunci].riwayat[i].produk, dbTempforSort[*kunci].riwayat[i].tipe, dbTempforSort[*kunci].riwayat[i].nilaiAset + dbTempforSort[*kunci].riwayat[i].nilaiReturn, dbTempforSort[*kunci].riwayat[i].untung, " ", dbTempforSort[*kunci].riwayat[i].nilaiReturn)
+				}else{
+					fmt.Printf("%-1s %-5d %-40s %-24s %-16d  %-.2f %-12s %-18d\n", " ", count, dbTempforSort[*kunci].riwayat[i].produk, dbTempforSort[*kunci].riwayat[i].tipe, dbTempforSort[*kunci].riwayat[i].nilaiAset + dbTempforSort[*kunci].riwayat[i].nilaiReturn, dbTempforSort[*kunci].riwayat[i].untung, " ", dbTempforSort[*kunci].riwayat[i].nilaiReturn)
 				}
 			}
-			uiFooterTablePanjang()
-		} 
+		}
 
-		for !stat{
-			fmt.Println()
-			fmt.Println("[1] Cari aset")
-			fmt.Println("[2] Urutkan aset berdasarkan nilai aset")
-			fmt.Println("[3] Beli aset")
-			fmt.Println("[4] Jual aset")
-			fmt.Println("[5] Hapus portofolio")
+		uiFooterTablePanjang()
+	} 
+
+	for !stat{
+		fmt.Println()
+		fmt.Println("[1] Urutkan aset berdasarkan nilai aset")
+		fmt.Println("[2] Urutkan aset berdasarkan nama aset")
+		fmt.Println("[3] Beli aset")
+		fmt.Println("[4] Jual aset")
+		fmt.Println("[5] Hapus portofolio")
+		fmt.Println("[0] Kembali")
+		fmt.Println()
+		fmt.Print("Pilihan: ")
+		fmt.Scan(&pilihan)
+
+		switch pilihan{
+		case 1:
+			sortPortobyAset(kunci)
+			afterSort(sumber, namaPorto, kunci, totalLokal, saham, reksadana, obligasi)
+			
 			fmt.Println("[0] Kembali")
-			fmt.Println()
+			fmt.Print("Pilihan: ")
+			fmt.Scan(&pilihan)
+			clearScreen()
+		case 2:
+			sortforBinary(kunci)
+			afterSort(sumber, namaPorto, kunci, totalLokal, saham, reksadana, obligasi)
+
+			fmt.Println("[1] Cari aset")
+			fmt.Println("[0] Kembali")
 			fmt.Print("Pilihan: ")
 			fmt.Scan(&pilihan)
 
-			switch pilihan{
-			case 1:
+			if pilihan == 1{
+				fmt.Println()
 
-			case 2:
-				sortPorto(kunci)
-				stat = true
-			case 3:
 				clearScreen()
-				katalog(pilihan, kunci, tipereksadana)
-				stat = true
-				sort = true
-			case 4:
+				afterSort(sumber, namaPorto, kunci, totalLokal, saham, reksadana, obligasi)
+				
+				fmt.Print("Masukkan portofolio yang akan dicari (nomor): ")
+				fmt.Scan(&pilihanporto)
+
+				target = dbTempforSort[*kunci].riwayat[pilihanporto-1].produk
+
+				pilihan = cariAsetBinary(kunci, target)
+
 				clearScreen()
-				if pilihanporto != 0{
-					introJualAset(kunci, jumlahDijual, asetDijual, pilihan)
-					sort = true
-				}else {
-					fmt.Println("Anda belum memiliki aset apapun")
-				}
-			case 5:
-				clearScreen()
-				if pilihanporto != 0{
-					hapusPorto(kunci, pilihanporto)
-					sort = true
+				uiHeaderTable(sumber, 0, 0)
+				uiHeaderPorto(dbUser[*kunci].username, namaPorto, totalLokal, saham, reksadana, obligasi)
+
+				if dbTempforSort[*kunci].riwayat[pilihan].nilaiReturn >= 0 {
+					fmt.Printf("%-1s %-5d %-40s %-24s %-17d  %-.2f %-12s %-18d %-21s\n", " ", pilihan+1, dbTempforSort[*kunci].riwayat[pilihan].produk, dbTempforSort[*kunci].riwayat[pilihan].tipe, dbTempforSort[*kunci].riwayat[pilihan].nilaiAset + dbTempforSort[*kunci].riwayat[pilihan].nilaiReturn, dbTempforSort[*kunci].riwayat[pilihan].untung, " ", dbTempforSort[*kunci].riwayat[pilihan].nilaiReturn, dbTempforSort[*kunci].riwayat[pilihan].tanggal)
 				}else{
-					fmt.Print("Anda belum memiliki portofolio")
+					fmt.Printf("%-1s %-5d %-40s %-24s %-16d  %-.2f %-12s %-18d %-23s\n", " ", pilihan+1, dbTempforSort[*kunci].riwayat[pilihan].produk, dbTempforSort[*kunci].riwayat[pilihan].tipe, dbTempforSort[*kunci].riwayat[pilihan].nilaiAset + dbTempforSort[*kunci].riwayat[pilihan].nilaiReturn, dbTempforSort[*kunci].riwayat[pilihan].untung, " ", dbTempforSort[*kunci].riwayat[pilihan].nilaiReturn, dbTempforSort[*kunci].riwayat[pilihan].tanggal)
 				}
-			case 0:
-				clearScreen()
-				sort = true
-				stat = true
-			default:
-				clearScreen()
-				fmt.Println("Pilihan tidak valid")
+
+				uiFooterTablePanjang()
 			}
+		case 3:
+			clearScreen()
+			katalog(pilihan, kunci, tipereksadana)
+			stat = true
+		case 4:
+			clearScreen()
+			if pilihanporto != 0{
+				introJualAset(kunci, jumlahDijual, asetDijual, pilihan)
+			}else {
+				fmt.Println("Anda belum memiliki aset apapun")
+			}
+		case 5:
+			clearScreen()
+			if pilihanporto != 0{
+				hapusPorto(kunci, pilihanporto)
+			}else{
+				fmt.Print("Anda belum memiliki portofolio")
+			}
+		case 0:
+			clearScreen()
+			stat = true
+		default:
+			clearScreen()
+			fmt.Println("Pilihan tidak valid")
 		}
 	}
 }
+
 
 func hitungDetail(saham, reksadana, obligasi *float64, kunci, totalLokal *int, pilihan int){
 	*totalLokal = dbPorto[*kunci].detailPorto[pilihan-1].saham + dbPorto[*kunci].detailPorto[pilihan-1].reksadana + dbPorto[*kunci].detailPorto[pilihan-1].obligasi
@@ -177,4 +218,3 @@ func hapusPorto(kunci *int, pilihPorto int){
 
 	fmt.Println("Portofolio berhasil dihapus")
 }
-

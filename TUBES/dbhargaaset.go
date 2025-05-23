@@ -82,7 +82,7 @@ func seedsaham(){
 
     dbSaham[6] = saham{
         produksaham: detailProduk{
-        namaProduk: "DMAS", 
+        namaProduk: "TASA", 
         hargaPerLembar: 175, 
         returnaset: 16.48,
         },

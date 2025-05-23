@@ -56,7 +56,6 @@ func profil(datauser user, kunci, asetDijual, jumlahDijual *int, pilihan int){
 		case 3:
 			clearScreen()
 			switchAkun(datauser, kunci)
-			stat = true
 		case 0:
 			clearScreen()
 			stat = true
@@ -77,5 +76,6 @@ func switchAkun (datauser user, kunci *int){
 		}
 	}
 
+	clearScreen()
 	fmt.Printf("Anda sekarang login sebagai %s.\n", dbUser[*kunci].username)
 }

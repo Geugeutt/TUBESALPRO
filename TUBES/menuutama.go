@@ -12,7 +12,9 @@ func menuUtama(datauser user, pilihan int, kunci *int, isNew *bool) {
 
 	for !isKeluar {
 		dashboard(kunci, *isNew)
-
+		
+		clearScreen()
+		
 		fmt.Println("\n========== MENU UTAMA ==========")
 		fmt.Println("[1] Katalog")
 		fmt.Println("[2] Portofolio")
@@ -72,5 +74,6 @@ func main() {
 
 	i = 2
 
+	clearScreen()
 	fiturLoginDaftar(datauser, i, pilihan, &kunci, &isNew)
 }
