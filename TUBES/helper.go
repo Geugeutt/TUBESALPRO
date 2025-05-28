@@ -1,7 +1,5 @@
 package main
-
-// import "fmt"
-
+import "fmt"
 
 func kosongkanTempforSort(kunci *int){
 	for i:=0 ; i<NMAX ; i++{
@@ -18,7 +16,6 @@ func kosongkanTempforSort(kunci *int){
 		}
 	}
 }
-
 
 func pengisianArrayBantu(kunci *int, namaPorto string){
 	var count int = -1
@@ -46,24 +43,19 @@ func pengisianArrayBantu(kunci *int, namaPorto string){
 	untungRugi(&dbTempforSort, kunci)
 }
 
-func untungRugi(db *[NMAX]transaksi, kunci *int){
+func tampilArrayBantu(kunci, count *int, namaPorto string){
 	for i:=0 ; i<NMAX ; i++{
-		if db[*kunci].riwayat[i].tanda == 1{
-			db[*kunci].riwayat[i].nilaiReturn = int(db[*kunci].riwayat[i].untung * float64(db[*kunci].riwayat[i].nilaiAset))
+		if dbTempforSort[*kunci].riwayat[i].nilaiAset != 0 && dbTempforSort[*kunci].riwayat[i].portofolio == namaPorto{
+			*count++
+			if dbTempforSort[*kunci].riwayat[i].nilaiReturn >= 0 {
+				fmt.Printf("%-1s %-5d %-40s %-24s %-17d  %-.3f %-12s %-18d\n", " ", *count, dbTempforSort[*kunci].riwayat[i].produk, dbTempforSort[*kunci].riwayat[i].tipe, dbTempforSort[*kunci].riwayat[i].nilaiAset + dbTempforSort[*kunci].riwayat[i].nilaiReturn, dbTempforSort[*kunci].riwayat[i].untung, " ", dbTempforSort[*kunci].riwayat[i].nilaiReturn)
+			}else{
+				fmt.Printf("%-1s %-5d %-40s %-24s %-16d  %-.3f %-12s %-18d\n", " ", *count, dbTempforSort[*kunci].riwayat[i].produk, dbTempforSort[*kunci].riwayat[i].tipe, dbTempforSort[*kunci].riwayat[i].nilaiAset + dbTempforSort[*kunci].riwayat[i].nilaiReturn, dbTempforSort[*kunci].riwayat[i].untung, " ", dbTempforSort[*kunci].riwayat[i].nilaiReturn)
+			}
 		}
 	}
 }
 
-// func trackIndeksValid(kunci *int){
-// 	for i:=0 ; i<NMAX ; i++{
-// 		if dbTempforSort[*kunci].riwayat[i].produk != ""{
-// 			fmt.Println("Indeks yang valid: ", i)
-// 		}else{
-// 			break
-// 		}
-// 	}
-
-// 	var temp string
-// 	fmt.Println("Udah?: ")
-// 	fmt.Scan(&temp)
-// }
+func clearScreen() {
+	fmt.Print("\033[H\033[2J")
+}
