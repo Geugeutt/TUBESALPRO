@@ -1,12 +1,11 @@
-# 📈 Aplikasi Manajemen Investasi
+# 📈 Aplikasi Manajemen Investasi 
 
 Aplikasi ini dibuat untuk membantu pengguna dalam mengatur portofolio investasinya secara sederhana.  
 Dibuat pakai bahasa Go sebagai bentuk implementasi materi-materi yang udah kami pelajari selama perkuliahan.
 
 ## 🧠 Deskripsi Singkat
 
-Aplikasi berbasis CLI (Command Line Interface) ini punya beberapa fitur dasar kayak ngatur portofolio, lihat harga aset, 
-sampe nyimpen data user. Walaupun simple, tapi udah cukup buat simulasi manajemen investasi mini.
+Aplikasi berbasis CLI (Command Line Interface) ini punya beberapa fitur dasar kayak ngatur portofolio, lihat harga aset, sampe nyimpen data user. Walaupun simple, tapi udah cukup buat simulasi manajemen investasi mini.
 
 ## 🔧 Fitur-Fitur
 
@@ -18,6 +17,7 @@ sampe nyimpen data user. Walaupun simple, tapi udah cukup buat simulasi manajeme
 
 ## 🗂 Struktur File 
 
+```plaintext
 fiturMenu.go          // Menu utama program
 fiturProfil.go        // Buat ngatur data profil user
 fiturPortofolio.go    // Fungsi CRUD portofolio
@@ -28,3 +28,4 @@ dataBentukan.go       // Struct data yang kita pake
 helper.go             // Fungsi bantu kayak input & validasi
 database.go           // Simulasi database (tanpa SQL)
 go.mod                // Modul Go
+
